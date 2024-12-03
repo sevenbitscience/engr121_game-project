@@ -1,7 +1,7 @@
 """
-A skill based reaction-time game for the CPX
+A skill based reaction time game for the CPX
 
-Written by Joey Milausnic
+Written by Joey Milausnic, Edits suggested by Tyler Bower
 09/05/2024
 """
 
@@ -15,7 +15,7 @@ player_color = (0,50,50)
 goal_color = (0,100,0)
 background_color = (10,0,0)
 
-# Game variables
+# Game Variables
 game_timer = 0
 score = 0
 player_position = 0
@@ -24,7 +24,7 @@ goal_position = [7, 0, 4]
 button_state = False
 last_button_state = False
 
-# Automatic brightness control
+# Automatic Brightness Control
 light_values = [60]*50
 
 def average_colors(color_1, color_2):
@@ -36,7 +36,6 @@ def average_colors(color_1, color_2):
 def show_game():
     for p in range(10):
         if p == player_position:
-            #cp.pixels[p] = average_colors(player_color, cp.pixels[p])
             cp.pixels[p] = player_color
         elif p in goal_position:
             cp.pixels[p] = goal_color
@@ -55,13 +54,10 @@ def update_number_of_goals():
     while len(goal_position) < numberOfGoals:
         goal_position.append(randrange(0,10))
 
-    # print(f"goal_position={goal_position}, score={score}")
-
 def show_score(good):
     score_color = (0,100,0)
     if not good:
         score_color = (100,0,0)
-
     for p in range(10):
         if p <= score-1:
             cp.pixels[p] = score_color
@@ -70,9 +66,7 @@ def show_score(good):
     sleep(0.5)
 
 def show_win_screen():
-    # Reset the game
-
-    #cp.play_file("winner.wav")
+    # Reset Game
     for x in range(6):
         if cp.switch: cp.start_tone(220*(x+1))
         cp.pixels.fill((100,0,0))
@@ -84,28 +78,25 @@ def show_win_screen():
         if cp.switch: cp.stop_tone()
     cp.stop_tone()
 
-# Write your funky method here
+
 while True:
     show_game()
-
-    # Get current button presses
+    # Get Current Button Presses
     button_state = cp.button_a | cp.button_b
     if button_state > last_button_state and player_position in goal_position:
-        # Player hit the goal
-
-        # Check how many goals they hit
-        # and update the goal positions
+        # Player hit goal
+        # Check how many goals hit
+        # and update goal positions
         for i in range(len(goal_position)):
             if goal_position[i] == player_position:
                 goal_position[i] = randrange(0,10)
                 score += 1
-
         player_direction *= -1
         update_number_of_goals()
         if cp.switch: cp.play_tone(430+(20*score), 0.2)
         show_score(True)
     elif button_state > last_button_state:
-        # Player missed the goal
+        # Player missed goal
         player_direction *= -1
         if score > 0: score -= 1
         update_number_of_goals()
@@ -119,11 +110,11 @@ while True:
         numberOfGoals = 3
         update_number_of_goals()
 
-    # Move the player 
-    if score < 3:                   # Easy difficulty
+    # Move Player 
+    if score < 3:                   # Easy Difficulty
         if game_timer % 4 == 0:
             player_position = (player_position+player_direction)%10
-    elif score < 7:                 # Middle difficulty
+    elif score < 7:                 # Medium Difficulty
         if game_timer % 3 == 0:
             player_position = (player_position+player_direction)%10
     else:
@@ -131,14 +122,13 @@ while True:
             player_position = (player_position+player_direction)%10
 
 
-    # Update old input
+    # Update Outdated Input
     last_button_state = button_state 
 
-    #print(cp.light)
     light_values.pop(0)
     light_values.append(cp.light)
     average = (sum(light_values)/len(light_values))/100
     cp.pixels.brightness = average
 
-    # Update timer
+    # Update Timer
     game_timer = (game_timer + 1) % 60
