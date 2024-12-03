@@ -17,12 +17,15 @@ background_color = (10,0,0)
 
 # Game variables
 game_timer = 0
-score = 9
+score = 0
 player_position = 0
 player_direction = 1
 goal_position = [7, 0, 4]
 button_state = False
 last_button_state = False
+
+# Automatic brightness control
+light_values = [60]*50
 
 def average_colors(color_1, color_2):
     return (((color_1[0]+color_2[0])/2), 
@@ -52,7 +55,7 @@ def update_number_of_goals():
     while len(goal_position) < numberOfGoals:
         goal_position.append(randrange(0,10))
 
-    print(f"goal_position={goal_position}, score={score}")
+    # print(f"goal_position={goal_position}, score={score}")
 
 def show_score(good):
     score_color = (0,100,0)
@@ -109,7 +112,8 @@ while True:
         show_score(False)
         if cp.switch: cp.play_tone(230, 1)
 
-    if score == 10:                 # Check for win condition
+    # Check for win condition
+    if score == 10: 
         score = 0
         show_win_screen()
         numberOfGoals = 3
@@ -131,7 +135,10 @@ while True:
     last_button_state = button_state 
 
     #print(cp.light)
-    #cp.pixels.brightness = (cp.pixels.brightness + (cp.light/100)) / 2
+    light_values.pop(0)
+    light_values.append(cp.light)
+    average = (sum(light_values)/len(light_values))/100
+    cp.pixels.brightness = average
 
     # Update timer
     game_timer = (game_timer + 1) % 60
