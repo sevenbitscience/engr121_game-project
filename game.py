@@ -27,12 +27,6 @@ last_button_state = False
 # Automatic Brightness Control
 light_values = [60]*50
 
-def average_colors(color_1, color_2):
-    return (((color_1[0]+color_2[0])/2), 
-            ((color_1[1]+color_2[1])/2),
-            ((color_1[2]+color_2[2])/2)
-            )
-
 def show_game():
     for p in range(10):
         if p == player_position:
