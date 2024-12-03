@@ -25,7 +25,10 @@ button_state = False
 last_button_state = False
 
 def average_colors(color_1, color_2):
-    return (((color_1[0]+color_2[0])/2), ((color_1[1]+color_2[1])/2), ((color_1[2]+color_2[2])/2))
+    return (((color_1[0]+color_2[0])/2), 
+            ((color_1[1]+color_2[1])/2),
+            ((color_1[2]+color_2[2])/2)
+            )
 
 def show_game():
     for p in range(10):
@@ -68,14 +71,15 @@ def show_win_screen():
 
     #cp.play_file("winner.wav")
     for x in range(6):
-        cp.start_tone(220*(x+1))
+        if cp.switch: cp.start_tone(220*(x+1))
         cp.pixels.fill((100,0,0))
         sleep(0.1)
         cp.pixels.fill((0,100,0))
         sleep(0.1)
         cp.pixels.fill((0,0,100))
         sleep(0.1)
-        cp.stop_tone()
+        if cp.switch: cp.stop_tone()
+    cp.stop_tone()
 
 # Write your funky method here
 while True:
