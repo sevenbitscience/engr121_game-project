@@ -85,17 +85,16 @@ def show_win_screen():
 while True:
     show_game()
 
-
     # Get current button presses
     button_state = cp.button_a | cp.button_b
     if button_state > last_button_state and player_position in goal_position:
         # Player hit the goal
 
-        # First check how many goals they hit
+        # Check how many goals they hit
         # and update the goal positions
         for i in range(len(goal_position)):
             if goal_position[i] == player_position:
-                goal_position[i] = randrange(0,10) % 10
+                goal_position[i] = randrange(0,10)
                 score += 1
 
         player_direction *= -1
